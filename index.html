@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carriage — Dealership Review Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f4ecdf;
+        --bg-2: #ebe1d0;
+        --ink: #1a1410;
+        --ink-soft: #5a4a3c;
+        --accent: #6b1d1d;
+        --accent-2: #8a3a1f;
+        --line: #c9b89a;
+        --paper: #faf3e6;
+        --gold: #a87b3a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      body {
+        background-image: radial-gradient(
+            ellipse at top right,
+            rgba(168, 123, 58, 0.08),
+            transparent 50%
+          ),
+          radial-gradient(ellipse at bottom left, rgba(107, 29, 29, 0.06), transparent 50%);
+        min-height: 100vh;
+      }
+
+      .masthead {
+        border-bottom: 1.5px solid var(--ink);
+        padding: 28px 48px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 40px;
+        background: var(--bg);
+      }
+
+      .brand {
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 52px;
+        letter-spacing: -0.03em;
+        line-height: 0.9;
+        font-style: italic;
+      }
+
+      .brand small {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.25em;
+        font-style: normal;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        margin-top: 8px;
+      }
+
+      .who {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink-soft);
+      }
+
+      .who input {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        padding: 8px 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink);
+        border-radius: 0;
+        min-width: 180px;
+      }
+
+      .who input:focus {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+      }
+
+      nav.tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 1px solid var(--ink);
+        padding: 0 48px;
+        background: var(--bg);
+      }
+
+      nav.tabs button {
+        background: transparent;
+        border: none;
+        border-right: 1px solid var(--line);
+        padding: 14px 28px;
+        font-family: 'Fraunces', serif;
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--ink-soft);
+        cursor: pointer;
+        letter-spacing: -0.01em;
+        transition: all 0.2s;
+      }
+
+      nav.tabs button:hover {
+        color: var(--ink);
+        background: var(--bg-2);
+      }
+
+      nav.tabs button.active {
+        color: var(--accent);
+        font-weight: 600;
+        font-style: italic;
+        background: var(--paper);
+        position: relative;
+      }
+
+      nav.tabs button.active::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--accent);
+      }
+
+      main {
+        padding: 40px 48px 80px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .pane {
+        display: none;
+      }
+      .pane.active {
+        display: block;
+      }
+
+      /* ---- scrape pane ---- */
+
+      .scrape-card {
+        background: var(--paper);
+        border: 1.5px solid var(--ink);
+        padding: 36px;
+        box-shadow: 6px 6px 0 var(--ink);
+        max-width: 760px;
+      }
+
+      .scrape-card h2 {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 36px;
+        margin: 0 0 8px;
+        letter-spacing: -0.02em;
+      }
+
+      .scrape-card p.lede {
+        color: var(--ink-soft);
+        margin: 0 0 28px;
+        max-width: 56ch;
+      }
+
+      .scrape-form {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .scrape-form input {
+        flex: 1;
+        min-width: 280px;
+        background: var(--bg);
+        border: 1.5px solid var(--ink);
+        padding: 14px 18px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      .scrape-form input:focus {
+        outline: 3px solid var(--accent);
+        outline-offset: -3px;
+      }
+
+      button.primary {
+        background: var(--accent);
+        color: var(--paper);
+        border: 1.5px solid var(--ink);
+        padding: 14px 28px;
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-size: 18px;
+        cursor: pointer;
+        letter-spacing: -0.01em;
+        transition: all 0.15s;
+      }
+
+      button.primary:hover {
+        background: var(--ink);
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0 var(--accent);
+      }
+
+      button.primary:disabled {
+        opacity: 0.5;
+        cursor: wait;
+        transform: none;
+      }
+
+      .scrape-status {
+        margin-top: 24px;
+        padding: 16px 20px;
+        background: var(--bg-2);
+        border-left: 4px solid var(--accent);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+        display: none;
+      }
+
+      .scrape-status.show {
+        display: block;
+      }
+
+      .links-row {
+        margin-top: 28px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .links-row a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--bg);
+        border: 1px solid var(--ink);
+        padding: 10px 18px;
+        color: var(--ink);
+        text-decoration: none;
+        font-family: 'Fraunces', serif;
+        font-size: 15px;
+      }
+
+      .links-row a:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* ---- gallery pane ---- */
+
+      .gallery-controls {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 32px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .gallery-controls h2 {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 36px;
+        margin: 0;
+        letter-spacing: -0.02em;
+        flex: 1;
+      }
+
+      .gallery-controls .count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink-soft);
+        letter-spacing: 0.1em;
+      }
+
+      .filter-pill {
+        background: transparent;
+        border: 1px solid var(--ink-soft);
+        padding: 6px 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        color: var(--ink-soft);
+      }
+
+      .filter-pill.active {
+        background: var(--ink);
+        color: var(--paper);
+        border-color: var(--ink);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 28px;
+      }
+
+      .car {
+        background: var(--paper);
+        border: 1px solid var(--ink);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.2s;
+      }
+
+      .car:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+
+      .car .img-wrap {
+        aspect-ratio: 4/3;
+        background: var(--bg-2);
+        overflow: hidden;
+        border-bottom: 1px solid var(--ink);
+        position: relative;
+      }
+
+      .car img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .car .badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+      }
+
+      .car .badge.used {
+        background: var(--gold);
+      }
+
+      .car-body {
+        padding: 18px 20px 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .car-title {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 18px;
+        line-height: 1.25;
+        margin: 0 0 6px;
+        letter-spacing: -0.01em;
+      }
+
+      .car-price {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .car-reviews {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line);
+        font-size: 13px;
+        color: var(--ink-soft);
+      }
+
+      .car-reviews .review {
+        margin-bottom: 8px;
+      }
+
+      .car-reviews .review .stars {
+        color: var(--gold);
+        font-size: 14px;
+      }
+
+      .car-actions {
+        margin-top: auto;
+        padding-top: 14px;
+        display: flex;
+        gap: 8px;
+      }
+
+      .car-actions button {
+        flex: 1;
+        background: transparent;
+        border: 1px solid var(--ink);
+        padding: 8px 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        color: var(--ink);
+      }
+
+      .car-actions button:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      .empty {
+        padding: 80px 20px;
+        text-align: center;
+        color: var(--ink-soft);
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-size: 20px;
+      }
+
+      /* ---- modal ---- */
+
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 20, 16, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 24px;
+      }
+
+      .modal-backdrop.show {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--paper);
+        border: 1.5px solid var(--ink);
+        max-width: 520px;
+        width: 100%;
+        padding: 32px;
+        box-shadow: 8px 8px 0 var(--accent);
+      }
+
+      .modal h3 {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 28px;
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+      }
+
+      .modal .car-ref {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: var(--ink-soft);
+        margin-bottom: 24px;
+      }
+
+      .modal label {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ink-soft);
+        margin: 18px 0 8px;
+      }
+
+      .stars-input {
+        display: flex;
+        gap: 6px;
+      }
+
+      .stars-input button {
+        background: transparent;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: var(--line);
+        padding: 0;
+        line-height: 1;
+      }
+
+      .stars-input button.on {
+        color: var(--gold);
+      }
+
+      .modal textarea {
+        width: 100%;
+        background: var(--bg);
+        border: 1.5px solid var(--ink);
+        padding: 12px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        resize: vertical;
+        min-height: 110px;
+      }
+
+      .modal textarea:focus {
+        outline: 3px solid var(--accent);
+        outline-offset: -3px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        justify-content: flex-end;
+      }
+
+      .modal-actions button.ghost {
+        background: transparent;
+        border: 1px solid var(--ink);
+        padding: 10px 20px;
+        font-family: 'Fraunces', serif;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .modal-actions button.ghost:hover {
+        background: var(--ink);
+        color: var(--paper);
+      }
+
+      /* ---- report pane ---- */
+
+      .report-header {
+        display: flex;
+        align-items: baseline;
+        gap: 24px;
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+      }
+
+      .report-header h2 {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 48px;
+        margin: 0;
+        letter-spacing: -0.025em;
+      }
+
+      .report-header select {
+        background: var(--paper);
+        border: 1.5px solid var(--ink);
+        padding: 10px 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .report-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1px;
+        background: var(--ink);
+        border: 1.5px solid var(--ink);
+        margin-bottom: 40px;
+      }
+
+      .stat {
+        background: var(--paper);
+        padding: 24px 20px;
+      }
+
+      .stat .num {
+        font-family: 'Fraunces', serif;
+        font-size: 52px;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--accent);
+      }
+
+      .stat .lbl {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--ink-soft);
+        margin-top: 10px;
+      }
+
+      .report-section {
+        margin-bottom: 40px;
+      }
+
+      .report-section h3 {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 26px;
+        margin: 0 0 16px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .timeline {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .timeline li {
+        display: grid;
+        grid-template-columns: 90px 120px 1fr;
+        gap: 20px;
+        padding: 12px 0;
+        border-bottom: 1px dashed var(--line);
+        font-size: 14px;
+      }
+
+      .timeline .t {
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--ink-soft);
+        font-size: 12px;
+      }
+
+      .timeline .a {
+        font-family: 'Fraunces', serif;
+        font-style: italic;
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .timeline .d {
+        color: var(--ink);
+      }
+
+      .chip {
+        display: inline-block;
+        background: var(--bg-2);
+        border: 1px solid var(--line);
+        padding: 4px 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 24px 48px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: var(--ink-soft);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      @media (max-width: 700px) {
+        .masthead {
+          padding: 20px;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .brand {
+          font-size: 38px;
+        }
+        nav.tabs {
+          padding: 0 20px;
+        }
+        nav.tabs button {
+          padding: 12px 16px;
+          font-size: 15px;
+        }
+        main {
+          padding: 24px 20px 60px;
+        }
+        .timeline li {
+          grid-template-columns: 80px 1fr;
+        }
+        .timeline .a {
+          grid-column: 2;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="brand">
+        Carriage
+        <small>The Dealership Review Desk</small>
+      </div>
+      <div class="who">
+        <span>Working as</span>
+        <input id="user" placeholder="your username" />
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button data-tab="scrape" class="active">Pull Inventory</button>
+      <button data-tab="gallery">The Gallery</button>
+      <button data-tab="report">Daily Ledger</button>
+    </nav>
+
+    <main>
+      <!-- SCRAPE -->
+      <section class="pane active" id="scrape">
+        <div class="scrape-card">
+          <h2>Pull a dealership's inventory</h2>
+          <p class="lede">
+            Paste any dealership homepage. We'll hunt down its new and used inventory pages,
+            extract listings, and stage them in the gallery for review.
+          </p>
+          <div class="scrape-form">
+            <input
+              id="url"
+              type="url"
+              placeholder="https://www.somedealership.com"
+              autocomplete="off"
+            />
+            <button class="primary" id="go">Run scrape →</button>
+          </div>
+          <div class="scrape-status" id="status"></div>
+          <div class="links-row" id="links"></div>
+        </div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="pane" id="gallery">
+        <div class="gallery-controls">
+          <h2>The gallery</h2>
+          <button class="filter-pill active" data-filter="all">All</button>
+          <button class="filter-pill" data-filter="new">New</button>
+          <button class="filter-pill" data-filter="used">Used</button>
+          <span class="count" id="count"></span>
+        </div>
+        <div class="grid" id="grid"></div>
+        <div class="empty" id="empty" style="display: none">
+          Nothing here yet — pull a dealership's inventory to begin.
+        </div>
+      </section>
+
+      <!-- REPORT -->
+      <section class="pane" id="report">
+        <div class="report-header">
+          <h2>Daily ledger</h2>
+          <select id="reportDate"></select>
+        </div>
+        <div class="report-stats" id="stats"></div>
+        <div class="report-section">
+          <h3>Dealerships scraped</h3>
+          <div id="dealerships"></div>
+        </div>
+        <div class="report-section">
+          <h3>Cars reviewed</h3>
+          <div id="reviewed"></div>
+        </div>
+        <div class="report-section">
+          <h3>Timeline</h3>
+          <ul class="timeline" id="timeline"></ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Carriage · Local Edition</span>
+      <span id="serverInfo">localhost</span>
+    </footer>
+
+    <!-- review modal -->
+    <div class="modal-backdrop" id="modal">
+      <div class="modal">
+        <h3>Review this car</h3>
+        <div class="car-ref" id="modalRef"></div>
+        <label>Rating</label>
+        <div class="stars-input" id="stars">
+          <button data-v="1">★</button>
+          <button data-v="2">★</button>
+          <button data-v="3">★</button>
+          <button data-v="4">★</button>
+          <button data-v="5">★</button>
+        </div>
+        <label>Comment</label>
+        <textarea id="comment" placeholder="What did you notice?"></textarea>
+        <div class="modal-actions">
+          <button class="ghost" id="cancel">Cancel</button>
+          <button class="primary" id="save">Save review</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---- user persistence ----
+      const userInput = document.getElementById('user');
+      userInput.value = localStorage.getItem('user') || '';
+      userInput.addEventListener('change', () => {
+        localStorage.setItem('user', userInput.value.trim());
+      });
+
+      const user = () => userInput.value.trim() || 'anonymous';
+
+      // ---- tabs ----
+      document.querySelectorAll('nav.tabs button').forEach((b) => {
+        b.onclick = () => {
+          document.querySelectorAll('nav.tabs button').forEach((x) => x.classList.remove('active'));
+          document.querySelectorAll('.pane').forEach((x) => x.classList.remove('active'));
+          b.classList.add('active');
+          document.getElementById(b.dataset.tab).classList.add('active');
+          if (b.dataset.tab === 'gallery') loadGallery();
+          if (b.dataset.tab === 'report') loadReport();
+        };
+      });
+
+      // ---- scrape ----
+      const status = document.getElementById('status');
+      const links = document.getElementById('links');
+      document.getElementById('go').onclick = async () => {
+        const url = document.getElementById('url').value.trim();
+        if (!url) {
+          status.textContent = 'Enter a URL first.';
+          status.classList.add('show');
+          return;
+        }
+        const btn = document.getElementById('go');
+        btn.disabled = true;
+        btn.textContent = 'Working…';
+        status.classList.add('show');
+        status.textContent =
+          'Launching headless browser…\nDetecting inventory pages…\nThis can take 30-90 seconds.';
+        links.innerHTML = '';
+        try {
+          const res = await fetch('/api/scrape', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ url, user: user() }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'scrape failed');
+          status.textContent =
+            `✓ Done.\n` +
+            `Dealership: ${data.dealership}\n` +
+            `Cars scraped this run: ${data.carsScraped}\n` +
+            `Total cars tracked: ${data.totalCarsTracked}`;
+          links.innerHTML = '';
+          if (data.newInventoryUrl) {
+            const a = document.createElement('a');
+            a.href = data.newInventoryUrl;
+            a.target = '_blank';
+            a.innerHTML = '↗ New inventory page';
+            links.appendChild(a);
+          }
+          if (data.usedInventoryUrl) {
+            const a = document.createElement('a');
+            a.href = data.usedInventoryUrl;
+            a.target = '_blank';
+            a.innerHTML = '↗ Used inventory page';
+            links.appendChild(a);
+          }
+        } catch (e) {
+          status.textContent = '✗ ' + e.message;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Run scrape →';
+        }
+      };
+
+      // ---- gallery ----
+      let currentFilter = 'all';
+      document.querySelectorAll('.filter-pill').forEach((p) => {
+        p.onclick = () => {
+          document.querySelectorAll('.filter-pill').forEach((x) => x.classList.remove('active'));
+          p.classList.add('active');
+          currentFilter = p.dataset.filter;
+          loadGallery();
+        };
+      });
+
+      const escapeHtml = (s) =>
+        String(s || '').replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        );
+
+      async function loadGallery() {
+        const grid = document.getElementById('grid');
+        const empty = document.getElementById('empty');
+        const count = document.getElementById('count');
+        const params = currentFilter !== 'all' ? '?condition=' + currentFilter : '';
+        const cars = await fetch('/api/cars' + params).then((r) => r.json());
+        count.textContent = cars.length + ' listings';
+        if (cars.length === 0) {
+          grid.innerHTML = '';
+          empty.style.display = 'block';
+          return;
+        }
+        empty.style.display = 'none';
+        grid.innerHTML = cars
+          .map(
+            (c) => `
+          <div class="car" data-id="${escapeHtml(c.id)}">
+            <div class="img-wrap">
+              ${
+                c.image
+                  ? `<img src="${escapeHtml(c.image)}" loading="lazy" onerror="this.style.display='none'"/>`
+                  : ''
+              }
+              <span class="badge ${c.condition === 'used' ? 'used' : ''}">${escapeHtml(c.condition || '')}</span>
+            </div>
+            <div class="car-body">
+              <h4 class="car-title">${escapeHtml(c.title || 'Untitled')}</h4>
+              <div class="car-price">${c.price ? '$' + escapeHtml(String(c.price).replace(/^\$/, '')) : 'Price on request'}</div>
+              ${
+                (c.reviews && c.reviews.length)
+                  ? `<div class="car-reviews">
+                      ${c.reviews
+                        .slice(-2)
+                        .map(
+                          (r) =>
+                            `<div class="review"><span class="stars">${'★'.repeat(r.rating || 0)}${'☆'.repeat(5 - (r.rating || 0))}</span> <em>${escapeHtml(r.user)}</em>${r.comment ? ' — ' + escapeHtml(r.comment) : ''}</div>`,
+                        )
+                        .join('')}
+                    </div>`
+                  : ''
+              }
+              <div class="car-actions">
+                <button onclick="openReview('${escapeHtml(c.id)}', '${escapeHtml((c.title || '').replace(/'/g, ''))}')">Review</button>
+                ${c.url ? `<button onclick="window.open('${escapeHtml(c.url)}','_blank')">Listing ↗</button>` : ''}
+              </div>
+            </div>
+          </div>
+        `,
+          )
+          .join('');
+      }
+
+      // ---- review modal ----
+      const modal = document.getElementById('modal');
+      let currentCarId = null;
+      let currentRating = 0;
+
+      window.openReview = (id, title) => {
+        currentCarId = id;
+        currentRating = 0;
+        document.getElementById('modalRef').textContent = title || id;
+        document.getElementById('comment').value = '';
+        document
+          .querySelectorAll('.stars-input button')
+          .forEach((b) => b.classList.remove('on'));
+        modal.classList.add('show');
+      };
+
+      document.getElementById('cancel').onclick = () => modal.classList.remove('show');
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('show');
+      });
+
+      document.querySelectorAll('.stars-input button').forEach((b) => {
+        b.onclick = () => {
+          currentRating = +b.dataset.v;
+          document.querySelectorAll('.stars-input button').forEach((x, i) => {
+            x.classList.toggle('on', i < currentRating);
+          });
+        };
+      });
+
+      document.getElementById('save').onclick = async () => {
+        const comment = document.getElementById('comment').value.trim();
+        if (!currentRating && !comment) {
+          alert('Add a rating or a comment.');
+          return;
+        }
+        await fetch(`/api/cars/${encodeURIComponent(currentCarId)}/review`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ user: user(), rating: currentRating, comment }),
+        });
+        modal.classList.remove('show');
+        loadGallery();
+      };
+
+      // ---- report ----
+      async function loadReport() {
+        const dates = await fetch('/api/report/dates').then((r) => r.json());
+        const today = new Date().toISOString().slice(0, 10);
+        if (!dates.includes(today)) dates.unshift(today);
+        const sel = document.getElementById('reportDate');
+        sel.innerHTML = dates.map((d) => `<option value="${d}">${d}</option>`).join('');
+        sel.onchange = () => renderReport(sel.value);
+        renderReport(dates[0] || today);
+      }
+
+      async function renderReport(date) {
+        const r = await fetch('/api/report?date=' + encodeURIComponent(date)).then((x) => x.json());
+        document.getElementById('stats').innerHTML = `
+          <div class="stat"><div class="num">${r.totalActions}</div><div class="lbl">Total actions</div></div>
+          <div class="stat"><div class="num">${r.scrapes}</div><div class="lbl">Dealerships pulled</div></div>
+          <div class="stat"><div class="num">${r.reviews}</div><div class="lbl">Cars reviewed</div></div>
+          <div class="stat"><div class="num">${r.dealershipsScraped.length}</div><div class="lbl">Unique sources</div></div>
+        `;
+        document.getElementById('dealerships').innerHTML =
+          r.dealershipsScraped.length === 0
+            ? '<em style="color:var(--ink-soft)">None today.</em>'
+            : r.dealershipsScraped.map((d) => `<span class="chip">${escapeHtml(d)}</span>`).join('');
+        document.getElementById('reviewed').innerHTML =
+          r.carsReviewed.length === 0
+            ? '<em style="color:var(--ink-soft)">No reviews logged.</em>'
+            : r.carsReviewed
+                .map(
+                  (c) =>
+                    `<div style="padding:8px 0;border-bottom:1px dashed var(--line)">
+                      <strong>${escapeHtml(c.title || 'Untitled')}</strong>
+                      ${c.rating ? `<span style="color:var(--gold);margin-left:8px">${'★'.repeat(c.rating)}</span>` : ''}
+                    </div>`,
+                )
+                .join('');
+        const fmt = (iso) => new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('timeline').innerHTML =
+          r.timeline.length === 0
+            ? '<li><span class="t">—</span><span class="a">quiet</span><span class="d">Nothing logged for this day.</span></li>'
+            : r.timeline
+                .map(
+                  (a) => `<li>
+              <span class="t">${fmt(a.at)}</span>
+              <span class="a">${escapeHtml(a.action)}</span>
+              <span class="d">${escapeHtml(a.user)} · ${escapeHtml(JSON.stringify(a.details).slice(0, 200))}</span>
+            </li>`,
+                )
+                .join('');
+      }
+    </script>
+  </body>
+</html>
